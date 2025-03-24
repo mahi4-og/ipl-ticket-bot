@@ -2,37 +2,39 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import time
-import telegram  # For sending alerts
+from telegram import Bot
+from webdriver_manager.chrome import ChromeDriverManager
 
-# Set up Telegram bot (Replace with your own bot token & chat ID)
-TELEGRAM_BOT_TOKEN = "7570647929:AAGWy0Nru0qFejvTMGWBHdVZfyLAteNfQK8"
-TELEGRAM_CHAT_ID = "1725170783"
+# Set up Telegram bot (Replace with your actual bot token & chat ID)
+TELEGRAM_BOT_TOKEN = "7570647929:AAGWy0Nru0qFejvTMGWBHdVZfyLAteNfQK8"  # Replace with your bot token
+TELEGRAM_CHAT_ID = "1725170783"  # Replace with your chat ID
 
 def send_telegram_alert(message):
-    bot = telegram.Bot(token=TELEGRAM_BOT_TOKEN)
+    bot = Bot(token=TELEGRAM_BOT_TOKEN)
     bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=message)
 
-# Configure Selenium WebDriver (Headless Mode for GitHub Actions)
+# Configure Selenium WebDriver
 options = webdriver.ChromeOptions()
-options.add_argument("--headless")
+options.add_argument("--headless")  # Run in headless mode for GitHub Actions
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
 
-# Start WebDriver
-driver = webdriver.Chrome(options=options)
-driver.get("https://link.district.in/DSTRKT/hyj25jcj")  # Replace with actual ticket page URL
+# Use WebDriver Manager to install ChromeDriver automatically
+driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
 
-time.sleep(3)  # Wait for page to load
+# Open the District app ticket booking page
+driver.get("https://link.district.in/DSTRKT/hyj25jcj")  # Replace with the correct ticket page URL
+time.sleep(3)  # Allow page to load
 
-# Log in to the District app
+# Log in to the District app (Use the correct field names from Inspect Element)
 driver.find_element(By.NAME, "email").send_keys("mahimadarshi@gmail.com")
-driver.find_element(By.NAME, "passsword").send_keys("Mahi@768", Keys.RETURN)
-
+driver.find_element(By.NAME, "password").send_keys("Mahi@768", Keys.RETURN)
 time.sleep(5)  # Allow login to complete
 
 # Navigate to CSK vs RCB ticket page
-driver.get("https://link.district.in/DSTRKT/hyj25jcj")  # Replace with actual URL
+driver.get("https://link.district.in/DSTRKT/hyj25jcj")  # Replace with the correct URL
 
+# Keep checking for ticket availability
 while True:
     try:
         # Check if "Book Now" button is available
@@ -44,11 +46,8 @@ while True:
     except:
         print("Tickets not available yet. Retrying...")
     
-    time.sleep(10)  # Check every 10 seconds
+    time.sleep(5)  # Check every 5 seconds
 
-# Stop at payment for manual entry
+# Stop at the payment step for manual entry
 print("Stopping at payment step for manual checkout.")
-
-# Close the browser
 driver.quit()
-
