@@ -5,7 +5,7 @@ import time
 import telegram  # For sending alerts
 
 # Set up Telegram bot (Replace with your own bot token & chat ID)
-TELEGRAM_BOT_TOKEN = "http://t.me/cskrcbthala_bot"
+TELEGRAM_BOT_TOKEN = "7570647929:AAGWy0Nru0qFejvTMGWBHdVZfyLAteNfQK8"
 TELEGRAM_CHAT_ID = "1725170783"
 
 def send_telegram_alert(message):
@@ -25,8 +25,8 @@ driver.get("https://link.district.in/DSTRKT/hyj25jcj")  # Replace with actual ti
 time.sleep(3)  # Wait for page to load
 
 # Log in to the District app
-driver.find_element(By.NAME, "mahimadarshi@gmail.com").send_keys("mahimadarshi@gmail.com")
-driver.find_element(By.NAME, "Mahi@768").send_keys("Mahi@768", Keys.RETURN)
+driver.find_element(By.NAME, "email").send_keys("mahimadarshi@gmail.com")
+driver.find_element(By.NAME, "passsword").send_keys("Mahi@768", Keys.RETURN)
 
 time.sleep(5)  # Allow login to complete
 
